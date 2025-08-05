@@ -23,6 +23,7 @@
     "zod": "^4.0.14"
   },
   "devDependencies": {
+    "@eslint/js": "^9.32.0",
     "@types/koa": "^3.0.0",
     "@types/koa-bodyparser": "^4.3.12",
     "@types/koa-router": "^7.4.8",
@@ -33,6 +34,7 @@
     "eslint-plugin-prettier": "^5.5.3",
     "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.0"
   }
 }

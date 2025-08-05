@@ -4,7 +4,12 @@ type Method = 'get' | 'post' | 'put' | 'delete';
 
 export function createMethodDecorator(method: Method) {
   return (path: string): MethodDecorator => {
-    return (target: Object, key: string | symbol, descriptor: PropertyDescriptor) => {
+    return (
+      target: object,
+      key: string | symbol,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      descriptor: PropertyDescriptor
+    ) => {
       const routes = Reflect.getMetadata('routes', target.constructor) || [];
       routes.push({ method, path, handlerName: key });
       Reflect.defineMetadata('routes', routes, target.constructor);

@@ -1,5 +1,4 @@
 import KoaRouter from 'koa-router';
-import Koa, { Next } from 'koa';
 import { wrapHandler } from './utils/wrapHandler';
 
 type RouteDefinition = {
