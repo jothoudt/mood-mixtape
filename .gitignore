@@ -55,4 +55,4 @@ turbo/
 # Ignore only if using Yarn v3+ with Plug'n'Play (otherwise keep)
 api/package-lock.json
 client/package-lock.json
-*.lock
+# *.lock
