@@ -12,7 +12,7 @@ type Constructor<T = any> = new (...args: any[]) => T;
 
 export function registerControllers(
   router: KoaRouter,
-  controllers: Constructor[]
+  controllerInstances: object[],
 ) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   const methods: Record<RouteDefinition['method'], Function> = {
@@ -22,8 +22,8 @@ export function registerControllers(
     delete: router.delete.bind(router),
   };
 
-  for (const ControllerClass of controllers) {
-    const controllerInstance = new ControllerClass();
+  for (const instance of controllerInstances) {
+    const ControllerClass = instance.constructor;
     const basePath = Reflect.getMetadata('basePath', ControllerClass);
     const routes =
       (Reflect.getMetadata('routes', ControllerClass) as RouteDefinition[]) ||
@@ -34,7 +34,7 @@ export function registerControllers(
     for (const route of routes) {
       const fullPath = basePath + route.path;
       const handler =
-        controllerInstance[route.handlerName].bind(controllerInstance);
+        (instance as any)[route.handlerName].bind(instance);
 
       const validationEntry = validations.find(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

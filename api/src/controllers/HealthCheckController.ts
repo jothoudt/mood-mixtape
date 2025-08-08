@@ -4,7 +4,7 @@ import { Get } from '../decorators/Method';
 
 @Controller('/')
 export class HealthCheckController {
-  @Get('/')
+  @Get('')
   async healthCheck() {
     return {
       status: 'ok',

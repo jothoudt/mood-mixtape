@@ -9,7 +9,7 @@ export function wrapHandler(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return async function wrapped(ctx: Context, next: Next) {
     try {
-      const raw = ctx.request.body;
+      const raw = ctx.method === 'GET' ? ctx.query : ctx.request.body
       const args = schema ? schema.parse(raw) : raw;
 
       const result = await handler(args);
