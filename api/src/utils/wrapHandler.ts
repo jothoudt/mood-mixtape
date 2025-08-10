@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export function wrapHandler(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handler: (args: any) => Promise<any>,
+  handler: (args: any, ctx: Context) => Promise<any>,
   schema?: z.ZodTypeAny
 ) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -12,7 +12,7 @@ export function wrapHandler(
       const raw = ctx.method === 'GET' ? ctx.query : ctx.request.body
       const args = schema ? schema.parse(raw) : raw;
 
-      const result = await handler(args);
+      const result = await handler(args, ctx);
       if (result !== undefined) {
         ctx.body = result;
       }

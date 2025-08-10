@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { Controller } from "../decorators/Controller";
 import { Get } from "../decorators/Method";
 import { ChatGPTService } from "../services/ChatGPTService";
