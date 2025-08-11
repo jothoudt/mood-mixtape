@@ -21,7 +21,7 @@ const Playlist: FC<PlaylistProps> = ({ songs, mood, genre, accessToken }) => {
   const [createPlaylist, { isLoading, isError, error, data }] = useCreateSpotifyPlaylistMutation();
 
   const handleCreate = async () => {
-    const name = `MoodMixtape • ${new Date().toLocaleDateString()}`;
+    const name = `MoodMixtape • ${new Date().toLocaleDateString()} - ${genre} - ${mood}`;
     try {
       if (!accessToken) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ mood, genre, songs }));
