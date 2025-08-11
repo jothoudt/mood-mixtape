@@ -18,7 +18,7 @@ const safeParsedConfig = ConfigSchema.safeParse({
 
 if (!safeParsedConfig.success) {
   console.log('Unable to parse config', JSON.stringify(safeParsedConfig.error.issues));
-  process.exit(1)
+  process.exit(1);
 }
 
 export const config = safeParsedConfig.data;

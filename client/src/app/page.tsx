@@ -4,10 +4,27 @@ import React from 'react';
 import { useLazyGetRecommendationsQuery } from './api/chatgpt';
 import MoodInputForm from './components/MoodInputForm/MoodInputForm';
 import { Playlist } from './components/Playlist';
+import { useSession } from 'next-auth/react';
+import { Song } from './components/PlaylistItem';
 
 export default function Home() {
   const [mood, setMood] = React.useState<string>('');
   const [genre, setGenre] = React.useState<string>('');
+  const [songs, setSongs] = React.useState<Song[]>([]);
+  const { data: session } = useSession();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const accessToken = (session as any)?.accessToken;
+
+  React.useEffect(() => {
+    const saved = localStorage.getItem('moodMixtape:last');
+    if (saved) {
+      const { mood, genre, songs } = JSON.parse(saved);
+      setMood(mood ?? '');
+      setGenre(genre ?? '');
+      setSongs(songs ?? []);
+    }
+  }, []);
+
   const [trigger, { data, isFetching }] = useLazyGetRecommendationsQuery();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,6 +33,8 @@ export default function Home() {
 
     try {
       await trigger({ mood, genre }).unwrap();
+      if (data && data.length) setSongs(data);
+      if (!accessToken) localStorage.setItem('moodMixtape:lastSongs', JSON.stringify({ songs }));
     } catch (error) {
       console.error('Failed to fetch data:', error);
     }
@@ -45,7 +64,7 @@ export default function Home() {
         {(
           data
           && data?.length > 0
-          ? (<Playlist songs={data} />)
+          ? (<Playlist songs={data} accessToken={accessToken} />)
           : <p className='text-center text-xs text-muted'>No playlist generated yet.</p>
         )}
       </main>

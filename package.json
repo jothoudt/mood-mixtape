@@ -9,16 +9,18 @@
     "api"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=client",
-    "build": "npm run build --workspace=client",
-    "start": "npm run start --workspace=client",
-    "lint": "npm run lint --workspace=client"
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "start": "turbo run start --parallel"
   },
   "devDependencies": {
-    "concurrently": "^9.2.0",
     "eslint": "^9.32.0",
     "prettier": "^3.6.2",
+    "turbo": "^2.0.0",
     "typescript": "^5.9.2",
     "zod": "^4.0.14"
-  }
+  },
+  "packageManager": "yarn@1.22.22"
 }

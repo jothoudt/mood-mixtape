@@ -1,5 +1,6 @@
-import { Song } from "../PlaylistItem/types";
+import { Song } from '../PlaylistItem/types';
 
 export type PlaylistProps = {
-  songs: Song[],
-}
+  accessToken?: string;
+  songs: Song[];
+};

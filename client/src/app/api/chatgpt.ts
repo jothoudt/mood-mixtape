@@ -9,9 +9,9 @@ export const recommendationApi = createApi({
       query: ({ mood, genre }) => ({
         url: '/chatgpt/tracks',
         method: 'GET',
-        params: { mood, genre },        
+        params: { mood, genre },
       }),
-    }),    
+    }),
   }),
 });
 

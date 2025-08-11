@@ -1,4 +1,4 @@
-import { PlaylistEmbedProps } from "./types";
+import { PlaylistEmbedProps } from './types';
 
 export const PlaylistEmbed: React.FC<PlaylistEmbedProps> = ({ playlistId, url }) => {
   return (
@@ -14,7 +14,7 @@ export const PlaylistEmbed: React.FC<PlaylistEmbedProps> = ({ playlistId, url })
         className="rounded-lg"
       />
     </div>
-  )
-}
+  );
+};
 
 export default PlaylistEmbed;

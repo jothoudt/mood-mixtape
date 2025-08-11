@@ -1,8 +1,8 @@
 import { Context } from 'koa';
-import { Controller } from "../decorators/Controller";
-import { Post } from "../decorators/Method";
-import { Song } from "../models/songs";
-import { SpotifyService } from "../services/SpotifyService";
+import { Controller } from '../decorators/Controller';
+import { Post } from '../decorators/Method';
+import { Song } from '../models/songs';
+import { SpotifyService } from '../services/SpotifyService';
 
 @Controller('/spotify')
 export class SpotifyController {

@@ -6,13 +6,13 @@ export class ChatGPTService {
 
   constructor(
     openAiApiKey: string,
-    private promptTemplateService: PromptTemplateService,
+    private promptTemplateService: PromptTemplateService
   ) {
     this.openAiClient = new OpenAI({ apiKey: openAiApiKey });
   }
   async generateTrackList(args: {
     mood: string;
-    genre: string
+    genre: string;
   }): Promise<({ title: string; artist: string } | null)[]> {
     const response = await this.openAiClient.chat.completions.create({
       model: 'gpt-4.1',
@@ -32,10 +32,10 @@ export class ChatGPTService {
         if (!normalizedTitle) return null;
 
         const match = normalizedTitle.match(/^"(.*?)"\s+by\s+(.*)$/i);
-        if(!match) return null;
+        if (!match) return null;
         const [, title, artist] = match;
-        return { title: title.trim(), artist: artist.trim() }
+        return { title: title.trim(), artist: artist.trim() };
       })
-      .filter(Boolean)
+      .filter(Boolean);
   }
 }

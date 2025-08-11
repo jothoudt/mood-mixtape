@@ -1,23 +1,22 @@
-import type { Context, Next } from 'koa';
+import type { Context } from 'koa';
 import { z } from 'zod';
 
-export function wrapHandler(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handler: (args: any, ctx: Context) => Promise<any>,
+type InferArgs<S extends z.ZodTypeAny | undefined> = S extends z.ZodTypeAny ? z.infer<S> : unknown;
+
+export function wrapHandler<S extends z.ZodTypeAny | undefined>(
+  handler: (args: InferArgs<S>, ctx: Context) => Promise<unknown> | unknown,
   schema?: z.ZodTypeAny
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return async function wrapped(ctx: Context, next: Next) {
+  return async function wrapped(ctx: Context) {
     try {
-      const raw = ctx.method === 'GET' ? ctx.query : ctx.request.body
-      const args = schema ? schema.parse(raw) : raw;
+      const raw = ctx.method === 'GET' ? ctx.query : ctx.request.body;
+      const args = (schema ? schema.parse(raw) : raw) as InferArgs<S>;
 
       const result = await handler(args, ctx);
       if (result !== undefined) {
         ctx.body = result;
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof z.ZodError) {
         ctx.status = 400;
         ctx.body = {
@@ -25,14 +24,16 @@ export function wrapHandler(
           error: 'Validation Error',
           issues: err.issues,
         };
-      } else {
-        ctx.status = err.status || 500;
-        ctx.body = {
-          success: false,
-          error: err.message || 'Internal Server Error',
-        };
-        console.error(`[Error] ${ctx.method} ${ctx.url}`);
+        return;
       }
+      const e = err as { status?: number; message?: string };
+      ctx.status = e?.status ?? 500;
+      ctx.body = {
+        success: false,
+        error: e?.message ?? `Internal Server Error`,
+      };
+
+      console.error(`[Error] ${ctx.method} ${ctx.url}`);
     }
   };
 }

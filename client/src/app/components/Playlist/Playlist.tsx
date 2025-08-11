@@ -1,22 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { FC } from "react";
-import { PlaylistProps } from "./types";
-import PlaylistItem from "../PlaylistItem/PlaylistItem";
-import { useCreateSpotifyPlaylistMutation } from "@/app/api/spotify";
-import { PlaylistEmbed } from "../PlaylistEmbed";
-import { useSession, signIn } from "next-auth/react";
+import React, { FC } from 'react';
+import { PlaylistProps } from './types';
+import PlaylistItem from '../PlaylistItem/PlaylistItem';
+import { useCreateSpotifyPlaylistMutation } from '@/app/api/spotify';
+import { PlaylistEmbed } from '../PlaylistEmbed';
+import { signIn } from 'next-auth/react';
 
-const Playlist: FC<PlaylistProps> = ({ songs }) => {
+const STORAGE_KEY = 'moodMixtape:last';
+
+const Playlist: FC<PlaylistProps> = ({ songs, accessToken }) => {
   const [createPlaylist, { isLoading, isError, error, data }] = useCreateSpotifyPlaylistMutation();
-  const { data: session } = useSession();
-  const accessToken = (session as any)?.accessToken;
 
   const handleCreate = async () => {
     const name = `MoodMixtape • ${new Date().toLocaleDateString()}`;
     try {
       if (!accessToken) {
-        await signIn('spotify')
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored)
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ mood: '', genre: '', songs }));
+        await signIn('spotify', { redirect: true, callbackUrl: window.location.href });
+        return;
       }
       const res = await createPlaylist({ name, songs, accessToken }).unwrap();
       window.open(res.url, '_blank', 'noopener, noreferrer');
@@ -27,17 +32,31 @@ const Playlist: FC<PlaylistProps> = ({ songs }) => {
 
   return (
     <div className="p-4">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
-          Your AI-Curated Playlist
-        </h2>
-        <button
-          onClick={handleCreate}
-          disabled={isLoading || songs.length === 0}
-          className="rounded-md bg-accent px-4 py-2 text-white transition hover:bg-accent-pink disabled:opacity-60"
-        >
-          {isLoading ? 'Creating...' : 'Create on Spotify'}
-        </button>
+      <div className="mb-4 grid grid-cols-1 items-center gap-3 sm:grid-cols-2">
+        <h2 className="text-lg font-semibold">Your AI-Curated Playlist</h2>
+        <div className="sm-justify-self-end">
+          <button
+            onClick={handleCreate}
+            disabled={isLoading || songs.length === 0}
+            className="
+              rounded-lg
+              bg-green-500
+              px-4 py-2
+              text-white
+              font-semibold
+              shadow-md
+              hover:bg-green-600
+              hover:shadow-lg
+              transition
+              duration-200
+              disabled:opacity50
+              disabled:cursor-not-allowed
+              cursor-pointer
+            "
+          >
+            {isLoading ? 'Creating...' : 'Create on Spotify'}
+          </button>
+        </div>
       </div>
 
       {isError && (
@@ -46,32 +65,30 @@ const Playlist: FC<PlaylistProps> = ({ songs }) => {
         </p>
       )}
 
-      { data && (
+      {data && (
         <>
-        <p className="mb-3 text-sm text-success">
-          Playlist created!{' '}
-          <a
-            href={data.url}
-            target="_blank"
-            rel="noreferrer"
-            className="underline"
-          >
-            Open in spotify
-          </a>
-        </p>
-        <PlaylistEmbed playlistId={data.playlistId} url={data.url} />
+          <p className="mb-3 text-sm text-success">
+            Playlist created!{' '}
+            <a href={data.url} target="_blank" rel="noreferrer" className="underline">
+              Open in spotify
+            </a>
+          </p>
+          <PlaylistEmbed playlistId={data.playlistId} url={data.url} />
         </>
       )}
 
-      <ul className="space-y-3">
-        {songs.map((song) => (
-          <li key={song.title} className="flex items-center gap-4">
-            <PlaylistItem title={song.title} artist={song.artist} />
-          </li>
+      <ul className="mt-4 max-h-64 overflow-y-auto divide-y divide=white/10 rounded-lg bg-white/5">
+        {songs.map((song, index) => (
+          <PlaylistItem
+            key={`${song.title}-${index}`}
+            index={index}
+            title={song.title}
+            artist={song.artist}
+          />
         ))}
       </ul>
     </div>
-  )
-}
+  );
+};
 
 export default Playlist;

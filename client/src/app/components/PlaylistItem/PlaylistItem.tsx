@@ -1,15 +1,18 @@
 'use client';
 
-import { FC } from "react";
-import { Song } from "./types";
+import { FC } from 'react';
+import { SongProps } from './types';
 
-const PlaylistItem: FC<Song> = ({ title, artist }) => {
+const PlaylistItem: FC<SongProps> = ({ index, title, artist }) => {
   return (
-    <div className="flex flex-col">
-      <p className="text-sm font-medium">{title}</p>
-      <p className="text-xs text-gray-500">{artist}</p>
-    </div>
+    <li className="flex items-center gap-4 px-4 py-3">
+      <span className="w-6 text-sm tabular-numbs text-white/60">{index + 1}</span>
+      <div className="flex-1">
+        <p className="font-medium leading-tight">{title}</p>
+        <p className="text-sm text-white/60 leading-tight">{artist}</p>
+      </div>
+    </li>
   );
-}
+};
 
 export default PlaylistItem;

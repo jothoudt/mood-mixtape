@@ -1,6 +1,6 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { recommendationApi } from "../api/chatgpt";
-import { spotifyApi } from "../api/spotify";
+import { configureStore } from '@reduxjs/toolkit';
+import { recommendationApi } from '../api/chatgpt';
+import { spotifyApi } from '../api/spotify';
 
 export const store = configureStore({
   reducer: {
@@ -10,8 +10,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware()
       .concat(recommendationApi.middleware)
-      .concat(spotifyApi.middleware)
-  }
+      .concat(spotifyApi.middleware);
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

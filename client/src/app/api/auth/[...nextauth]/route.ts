@@ -1,21 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import SpotifyProvider from 'next-auth/providers/spotify';
-import axios from "axios";
+import axios from 'axios';
 
 const TOKEN_URL = 'https://accounts.spotify.com/api/token';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function refreshAccessToken(token: any) {
   try {
     const body = new URLSearchParams({
-      grant_type: "refresh_token",
+      grant_type: 'refresh_token',
       refresh_token: token.refreshToken as string,
       client_id: process.env.SPOTIFY_CLIENT_ID!,
       client_secret: process.env.SPOTIFY_CLIENT_SECRET!,
     });
 
     const res = await axios.post(TOKEN_URL, body, {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
 
     const { access_token, expires_in, refresh_token } = res.data;
@@ -41,11 +41,11 @@ const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           scope: [
-            "user-read-email",
-            "user-read-private",
-            "playlist-modify-public",
-            "playlist-modify-private",    
-          ].join(" "),
+            'user-read-email',
+            'user-read-private',
+            'playlist-modify-public',
+            'playlist-modify-private',
+          ].join(' '),
           show_dialog: true,
         },
       },
@@ -69,16 +69,13 @@ const authOptions: NextAuthOptions = {
       return await refreshAccessToken(token);
     },
     async session({ session, token }) {
-      if ('accessToken' in session) {
-        session.accessToken = token.accessToken;
-      }
-      if ('error' in session) {
-        session.error = token.error;
-      }
-        return session;
+      (session as any).accessToken = token.accessToken;
+      (session as any).error = token.error;
+
+      return session;
     },
   },
-  session: { strategy: "jwt" },
+  session: { strategy: 'jwt' },
 };
 
 const handler = NextAuth(authOptions);

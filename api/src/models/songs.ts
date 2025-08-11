@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const song = z.object({
+export const song = z.object({
   title: z.string(),
   artist: z.string(),
 });

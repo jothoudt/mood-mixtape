@@ -23,9 +23,9 @@ export const spotifyApi = createApi({
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        body: { name, songs },        
+        body: { name, songs },
       }),
-    }),    
+    }),
   }),
 });
 

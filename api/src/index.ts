@@ -20,7 +20,7 @@ const router = new Router();
 
 const promptTemplateService = new PromptTemplateService();
 const chatGPTService = new ChatGPTService(config.openApiKey, promptTemplateService);
-const spotifyService = new SpotifyService(config.spotify);
+const spotifyService = new SpotifyService(config.spotifyBaseUrl);
 
 registerControllers(router, [
   new ChatGPTController(chatGPTService),
