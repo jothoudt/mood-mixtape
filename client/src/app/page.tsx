@@ -38,15 +38,13 @@ export default function Home() {
     } catch (error) {
       console.error('Failed to fetch data:', error);
     }
-  }
+  };
 
   return (
-    <div className='bg-background text-foreground min-h-screen flex items-center justify-center px-4'>
-      <main className='w-full max-w-xl bg-surface p-8 rounded-xl shadow-lg'>
-        <h1 className='text-4xl font-bold text-accent text-center mb-4'>
-          MoodMixtape
-        </h1>
-        <p className='text-muted text-center mb-8'>
+    <div className="bg-background text-foreground min-h-screen flex items-center justify-center px-4">
+      <main className="w-full max-w-xl bg-surface p-8 rounded-xl shadow-lg">
+        <h1 className="text-4xl font-bold text-accent text-center mb-4">MoodMixtape</h1>
+        <p className="text-muted text-center mb-8">
           Describe a vibe, pick a genre and we&apos;ll make the playlist.
         </p>
         <MoodInputForm
@@ -56,16 +54,11 @@ export default function Home() {
           setMood={setMood}
           handleSubmit={handleSubmit}
         />
-        {
-          isFetching && (
-            <p className="text-sm text-muted text-center">Loading your playlist...</p>
-          ) 
-        }  
-        {(
-          data
-          && data?.length > 0
-          ? (<Playlist songs={data} accessToken={accessToken} />)
-          : <p className='text-center text-xs text-muted'>No playlist generated yet.</p>
+        {isFetching && <p className="text-sm text-muted text-center">Loading your playlist...</p>}
+        {data && data?.length > 0 ? (
+          <Playlist songs={data} accessToken={accessToken} />
+        ) : (
+          <p className="text-center text-xs text-muted">No playlist generated yet.</p>
         )}
       </main>
     </div>
