@@ -1,6 +1,12 @@
-# 🎵 MoodMixtape
+# 🎵 MoodMixtape(WIP)
 
 >**AI-powered Spotify playlist generator** that curates tracks based on your mood, then creates and embeds them directly into your Spotify account.
+
+## Demo
+
+| 1. Enter mood & genre | ![Form with mood/genre inputs in dark UI](client/public/readme/beginning.png) |
+| 2. AI-curated results | ![List of recommended tracks with artist names](client/public/readme/chatgptresult.png) |
+| 3. Created on Spotify | ![Embedded Spotify playlist titled “MoodMixtape • 8/11/2025”](client/public/readme/spotifyresult.png) |
 
 ## Overview
 
@@ -30,7 +36,7 @@ Spotify integration uses the **Web API** with full support for refreshing access
 
 **Frontend & Server**:
 - [Next.js 14+ (App Router)](https://nextjs.org/)  
-- [React 18](https://react.dev/)  
+- [React 19](https://react.dev/)  
 - [TypeScript](https://www.typescriptlang.org/)  
 - [Tailwind CSS](https://tailwindcss.com/)  
 
@@ -43,7 +49,7 @@ Spotify integration uses the **Web API** with full support for refreshing access
 
 **Integration**:
 - [Spotify Web API](https://developer.spotify.com/documentation/web-api/)  
-
+- [ChatGPT API]()
 ---
 
 ## 🚀 Getting Started

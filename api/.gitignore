@@ -32,9 +32,6 @@ coverage/
 # === ESLint / Prettier ===
 .eslintcache
 
-# === Next.js (if using in client/) ===
-.next/
-out/
 
 # === Logs ===
 logs/

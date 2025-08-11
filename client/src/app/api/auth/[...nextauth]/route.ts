@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import NextAuth, { NextAuthOptions } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
 import SpotifyProvider from 'next-auth/providers/spotify';
 import axios from 'axios';
 
 const TOKEN_URL = 'https://accounts.spotify.com/api/token';
 
-async function refreshAccessToken(token: any) {
+async function refreshAccessToken(token: JWT) {
   try {
     const body = new URLSearchParams({
       grant_type: 'refresh_token',
@@ -14,7 +14,7 @@ async function refreshAccessToken(token: any) {
       client_secret: process.env.SPOTIFY_CLIENT_SECRET!,
     });
 
-    const res = await axios.post(TOKEN_URL, body, {
+    const res = await axios.post<SpotifyTokenResponse>(TOKEN_URL, body, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
 
@@ -30,6 +30,14 @@ async function refreshAccessToken(token: any) {
     return { ...token, error: `RefreshAccessTokenError ${e}` };
   }
 }
+
+type SpotifyTokenResponse = {
+  access_token: string;
+  token_type: string;
+  scope: string;
+  expires_in: number;
+  refresh_token?: string;
+};
 
 const authOptions: NextAuthOptions = {
   debug: true,
@@ -69,8 +77,8 @@ const authOptions: NextAuthOptions = {
       return await refreshAccessToken(token);
     },
     async session({ session, token }) {
-      (session as any).accessToken = token.accessToken;
-      (session as any).error = token.error;
+      session.accessToken = token.accessToken;
+      session.error = token.error;
 
       return session;
     },

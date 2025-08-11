@@ -18,7 +18,7 @@ export const spotifyApi = createApi({
   endpoints: (builder) => ({
     createSpotifyPlaylist: builder.mutation<CreatePlaylistResponse, CreatePlaylistRequest>({
       query: ({ name, songs, accessToken }) => ({
-        url: '/spotify/playlist',
+        url: '/api/spotify/playlist',
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,

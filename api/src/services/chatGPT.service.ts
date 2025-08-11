@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { PromptTemplateService } from './PromptTemplateService';
+import { PromptTemplateService } from './promptTemplate.service';
 
 export class ChatGPTService {
   private openAiClient: OpenAI;

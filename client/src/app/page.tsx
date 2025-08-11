@@ -12,8 +12,7 @@ export default function Home() {
   const [genre, setGenre] = React.useState<string>('');
   const [songs, setSongs] = React.useState<Song[]>([]);
   const { data: session } = useSession();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const accessToken = (session as any)?.accessToken;
+  const accessToken = session?.accessToken ?? null;
 
   React.useEffect(() => {
     const saved = localStorage.getItem('moodMixtape:last');

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { FC } from 'react';
@@ -7,6 +6,14 @@ import PlaylistItem from '../PlaylistItem/PlaylistItem';
 import { useCreateSpotifyPlaylistMutation } from '@/app/api/spotify';
 import { PlaylistEmbed } from '../PlaylistEmbed';
 import { signIn } from 'next-auth/react';
+
+function getErrorMessage(err: unknown): string {
+  if (typeof err === 'object' && err !== null && 'data' in err) {
+    const data = (err as { data?: { error?: string } }).data;
+    if (data?.error) return data.error;
+  }
+  return 'Could not create playlist.';
+}
 
 const STORAGE_KEY = 'moodMixtape:last';
 
@@ -59,11 +66,7 @@ const Playlist: FC<PlaylistProps> = ({ songs, accessToken }) => {
         </div>
       </div>
 
-      {isError && (
-        <p className="mb-3 text-sm text-error">
-          {(error as any)?.data?.error ?? 'Could not create playlist.'}
-        </p>
-      )}
+      {isError && <p className="mb-3 text-sm text-error">{getErrorMessage(error)}</p>}
 
       {data && (
         <>

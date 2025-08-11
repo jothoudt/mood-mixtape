@@ -7,7 +7,7 @@ export const recommendationApi = createApi({
   endpoints: (builder) => ({
     getRecommendations: builder.query<Song[], { mood: string; genre: string }>({
       query: ({ mood, genre }) => ({
-        url: '/chatgpt/tracks',
+        url: '/api/chatgpt/tracks',
         method: 'GET',
         params: { mood, genre },
       }),
