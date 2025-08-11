@@ -56,3 +56,6 @@ turbo/
 api/package-lock.json
 client/package-lock.json
 # *.lock
+# Turborepo cache
+.turbo/
+**/.turbo/
