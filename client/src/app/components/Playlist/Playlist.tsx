@@ -17,17 +17,18 @@ function getErrorMessage(err: unknown): string {
 
 const STORAGE_KEY = 'moodMixtape:last';
 
-const Playlist: FC<PlaylistProps> = ({ songs, accessToken }) => {
+const Playlist: FC<PlaylistProps> = ({ songs, mood, genre, accessToken }) => {
   const [createPlaylist, { isLoading, isError, error, data }] = useCreateSpotifyPlaylistMutation();
 
   const handleCreate = async () => {
     const name = `MoodMixtape • ${new Date().toLocaleDateString()}`;
     try {
       if (!accessToken) {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (!stored)
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ mood: '', genre: '', songs }));
-        await signIn('spotify', { redirect: true, callbackUrl: window.location.href });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ mood, genre, songs }));
+        await signIn('spotify', {
+          redirect: true,
+          callbackUrl: new URL(window.location.href).toString(),
+        });
         return;
       }
       const res = await createPlaylist({ name, songs, accessToken }).unwrap();
@@ -56,7 +57,7 @@ const Playlist: FC<PlaylistProps> = ({ songs, accessToken }) => {
               hover:shadow-lg
               transition
               duration-200
-              disabled:opacity50
+              disabled:opacity-50
               disabled:cursor-not-allowed
               cursor-pointer
             "
@@ -80,7 +81,7 @@ const Playlist: FC<PlaylistProps> = ({ songs, accessToken }) => {
         </>
       )}
 
-      <ul className="mt-4 max-h-64 overflow-y-auto divide-y divide=white/10 rounded-lg bg-white/5">
+      <ul className="mt-4 max-h-64 overflow-y-auto divide-y divide-white/10 rounded-lg bg-white/5">
         {songs.map((song, index) => (
           <PlaylistItem
             key={`${song.title}-${index}`}

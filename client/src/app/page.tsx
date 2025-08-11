@@ -24,16 +24,16 @@ export default function Home() {
     }
   }, []);
 
-  const [trigger, { data, isFetching }] = useLazyGetRecommendationsQuery();
+  const [trigger, { isFetching }] = useLazyGetRecommendationsQuery();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!mood.trim() || !genre.trim()) return;
 
     try {
-      await trigger({ mood, genre }).unwrap();
-      if (data && data.length) setSongs(data);
-      if (!accessToken) localStorage.setItem('moodMixtape:lastSongs', JSON.stringify({ songs }));
+      const result = await trigger({ mood, genre }).unwrap();
+      setSongs(result);
+      if (!accessToken) localStorage.setItem('moodMixtape:last', JSON.stringify({ songs }));
     } catch (error) {
       console.error('Failed to fetch data:', error);
     }
@@ -54,8 +54,8 @@ export default function Home() {
           handleSubmit={handleSubmit}
         />
         {isFetching && <p className="text-sm text-muted text-center">Loading your playlist...</p>}
-        {data && data?.length > 0 ? (
-          <Playlist songs={data} accessToken={accessToken} />
+        {songs && songs?.length > 0 ? (
+          <Playlist songs={songs} accessToken={accessToken} mood={mood} genre={genre} />
         ) : (
           <p className="text-center text-xs text-muted">No playlist generated yet.</p>
         )}
